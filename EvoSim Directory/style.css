@@ -1,0 +1,16 @@
+#myCanvas{
+    height: 526px;
+    width: 1024px;
+    border: 5px solid;
+    background-color: lightgray;
+}
+#keys{
+}
+#input{
+    height: 50px;
+    width: 100px;
+    border: 2px solid;
+}
+
+
+
