@@ -23,9 +23,6 @@ function Organism(xPos, yPos, levelP, birthDistance, maxChildP){
     this.birthDistance = birthDistance;
     this.numChild = 0;
     this.maxChild = maxChildP;
-    if(this.level >= 1){
-        this.food = 5;
-    }
 }
 
 function setup() {
@@ -34,9 +31,15 @@ function setup() {
     for(let i = 0; i < startingPlants; i++){
         let org = new Organism(Math.random()*xCanvas, Math.random()*yCanvas, 0, Math.random()*20 + 20, Math.random()*2 + 1)
         organisms.push(org);
+        console.log(org.level);
     }
+    console.log(organisms[0].level)
     clearIntervals();
+    console.log(organisms[0].level)
     setIntervals();
+    for(let i = 0; i < organisms.length; i++){
+        console.log(organisms[i].level);
+    }
 }
 
 function setIntervals(){
@@ -47,17 +50,27 @@ function clearIntervals(){
 }
 
 function draw() {
+    for(let org in organisms){
+        console.log(org.level);
+    }
     context.clearRect(0,0, canvas.width, canvas.height);
-    for(const org in organisms){
+    for(let i = 0; i < organisms.length; i++){
+        let org = organisms[i];
         context.beginPath();
+        //console.log("path");
         context.ellipse(org.x,org.y,orgDiameter,orgDiameter,0,0,2 * Math.PI);
-        if(org.level === 0){
+        let isLev = org.level === 0;
+        console.log(isLev);
+        console.log(org.level);
+        if(isLev){
             context.fillStyle = "green";
+            console.log("color");
         }
         if(org.level === 1){
             context.fillStyle = "yellow";
         }
         context.fill();
+        //console.log("fill");
     }
     die();
     predate();
@@ -68,7 +81,8 @@ function draw() {
 function reproduce(){
     let temp = [];
     let horny = [];
-    for(const org in organisms){
+    for(let i = 0; i < organisms.length; i++){
+        let org = organisms[i];
         horny.push(org);
     }
     for(let i = 0; i < organisms.length-1; i++){
@@ -82,7 +96,7 @@ function reproduce(){
                     let yPos = average(org1.y, org2.y) + Math.random()*b - b/2;
                     let rand = Math.random();
                     let birthDistance = b + Math.random()*10 - 5;
-                    console.log(birthDistance)
+                    //console.log(birthDistance);
                     let birthDistanceSum = 0;
                     let maxChildSum = 0;
                     for(let k = 0; k < organisms.length; k++){
@@ -90,8 +104,8 @@ function reproduce(){
                         maxChildSum += organisms[k].maxChild;
 
                     }
-                    console.log('average birth distance: ' + birthDistanceSum / organisms.length)
-                    console.log('maximum children: ' + maxChildSum / organisms.length)
+                    //console.log('average birth distance: ' + birthDistanceSum / organisms.length);
+                    //console.log('maximum children: ' + maxChildSum / organisms.length);
                     let level;
                     if(rand > .8){
                         level = org1.level + 1;
@@ -120,7 +134,8 @@ function reproduce(){
             }
         }
     }
-    for(const org in temp){
+    for(let i = 0; i < temp.length; i++){
+        let org = temp[i]
         organisms.push(org);
     }
 }
@@ -135,7 +150,7 @@ function predate(){
                 let org2 = organisms[j];
                 if(!temp.includes(org2) && org1.level - 1 === org2.level && inRange(org1,org2,org1.diameter + org2.diameter)){
                     temp.push(org2);
-                    org1.food += 1;
+                    org1.food++;
                 }
             }
         }
@@ -144,6 +159,7 @@ function predate(){
         for(let j = 0; j < temp.length; j++){
             if(organisms[i] === temp[j]){
                 organisms.splice(i,1);
+                console.log("predate is probably working");
                 break;
             }
         }
@@ -154,7 +170,7 @@ function die(){
     let temp = [];
     for(let i = 0; i < organisms.length; i++){
         let org1 = organisms[i];
-        org1.timeAlive += 1;
+        org1.timeAlive++;
         if(org1.timeAlive >= org1.lifeSpan){
             temp.push(org1);
             break;
@@ -177,6 +193,7 @@ function die(){
         for(let j = 0; j < temp.length; j++){
             if(organisms[i] === temp[j]){
                 organisms.splice(i,1);
+                console.log("die is probably working");
                 break;
             }
         }
